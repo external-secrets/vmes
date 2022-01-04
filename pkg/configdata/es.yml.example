@@ -1,0 +1,16 @@
+# apiVersion: external-secrets.io/v1alpha1
+# kind: ExternalSecret
+metadata:
+  name: example-aws
+spec:
+  refreshInterval: 1m
+  secretStoreRef:
+    name: secretstore-sample
+    kind: SecretStore
+  target:
+    name: secret-to-be-created-aws-simple
+    creationPolicy: Owner
+  data:
+  - secretKey: demo-key
+    remoteRef:
+      key: demo-simple
