@@ -1,0 +1,53 @@
+# vmes
+
+External Secrets not necessarily in Kubernetes.
+
+This project uses [ESO](https://github.com/external-secrets/external-secrets) as a dependency and basicaly leverages its provider implementations to grab secrets and write them to an env file.
+
+The initial need here is to run this project as a proccess on a VM that has some legacy applications that want to use secrets that are in a Secrets Manager. But we don't want to keep calling Secrets Managers from our applications, we want to just read values from env vars or env files.
+
+# How it works
+
+Since we already implemented and tested multiple provider clients in the ESO project, we are just importing them here. Since we had some dependencies on Kubernetes resources for some of the configurations, what we did here was to build a client that just looks for yaml files locally instead of calling Kubernetes at all.
+
+# Getting Started
+
+Copy the example files provided to edit and configure them:
+
+```
+cp pkg/configdata/es.yml.example pkg/configdata/es.yml
+cp pkg/configdata/ss.yml.example pkg/configdata/ss.yml
+```
+
+Open `pkg/configdata/es.yml` and edit the following fields:
+
+- **spec.refreshInterval:** Choose a Time Duration interval used by the operator to fetch new secrets (1m = 1 minute, 1h = 1 hour, etc).
+- **spec.target.name:** #TODO: chose the env file where this will end up? (for now writing to /etc/environment - you need to become root to write to this file)
+- **spec.data.secretKey:** The name of the Env Var injected in the machine.
+- **spec.data.remoteRef.Key:** The name of the secret in the external provider.
+
+Open `pkg/configdata/ss.yml` and edit the following fields:
+
+- **spec.provider.aws.region:** Choose region where you created a secret.
+- **spec.provider.aws.service:** Let us use SecretsManager for this example.
+- **spec.provider.aws.auth:** Keep everything here the same for this example.
+
+
+Export some credentials to be able to pull secrets:
+
+```
+export AWS_ACCESS_KEY_ID="******"
+export AWS_SECRET_ACCESS_KEY="******"
+```
+
+Build the executable:
+
+```
+go build
+```
+
+Run it:
+
+```
+./vmes
+```
