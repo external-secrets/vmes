@@ -6,6 +6,10 @@ This project uses [ESO](https://github.com/external-secrets/external-secrets) as
 
 The initial need here is to run this project as a proccess on a VM that has some legacy applications, then we want to use secrets that are in a Secrets Manager. But we don't want to keep calling Secrets Managers from our applications, we want to just read values from env vars or env files.
 
+### Disclaimer ⚠️
+
+This project is not stable or ready to be used. 
+
 # How it works
 
 Since we already implemented and tested multiple provider clients in the ESO project, we are just importing them here. Since we had some dependencies on Kubernetes resources for some of the configurations, we have built a client that just looks for yaml files locally instead of calling Kubernetes at all.
@@ -51,3 +55,10 @@ Run it:
 ```
 ./vmes
 ```
+
+## Roadmap
+
+- [] Only AWS provider working for now, need to reimplement schema here or have another way to grab the right provider
+- [] Configure where secrets will sink in, being a arbitraty file, exported directly as env vars, or something else.
+- [] Support ec2 assume role and other auth methods
+- [] Test setup
