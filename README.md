@@ -4,11 +4,11 @@ External Secrets not necessarily in Kubernetes.
 
 This project uses [ESO](https://github.com/external-secrets/external-secrets) as a dependency and basicaly leverages its provider implementations to grab secrets and write them to an env file.
 
-The initial need here is to run this project as a proccess on a VM that has some legacy applications that want to use secrets that are in a Secrets Manager. But we don't want to keep calling Secrets Managers from our applications, we want to just read values from env vars or env files.
+The initial need here is to run this project as a proccess on a VM that has some legacy applications, then we want to use secrets that are in a Secrets Manager. But we don't want to keep calling Secrets Managers from our applications, we want to just read values from env vars or env files.
 
 # How it works
 
-Since we already implemented and tested multiple provider clients in the ESO project, we are just importing them here. Since we had some dependencies on Kubernetes resources for some of the configurations, what we did here was to build a client that just looks for yaml files locally instead of calling Kubernetes at all.
+Since we already implemented and tested multiple provider clients in the ESO project, we are just importing them here. Since we had some dependencies on Kubernetes resources for some of the configurations, we have built a client that just looks for yaml files locally instead of calling Kubernetes at all.
 
 # Getting Started
 
