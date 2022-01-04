@@ -26,7 +26,7 @@ cp pkg/configdata/ss.yml.example pkg/configdata/ss.yml
 Open `pkg/configdata/es.yml` and edit the following fields:
 
 - **spec.refreshInterval:** Choose a Time Duration interval used by the operator to fetch new secrets (1m = 1 minute, 1h = 1 hour, etc).
-- **spec.target.name:** #TODO: chose the env file where this will end up? (for now writing to /etc/environment - you need to become root to write to this file)
+- **spec.target.name:** #TODO: chose the env file where this will end up? (for now writing to /etc/environment - you need to run as root to write to this file)
 - **spec.data.secretKey:** The name of the Env Var injected in the machine.
 - **spec.data.remoteRef.Key:** The name of the secret in the external provider.
 
