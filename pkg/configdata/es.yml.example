@@ -8,7 +8,7 @@ spec:
     name: secretstore-sample
     kind: SecretStore
   target:
-    name: secret-to-be-created-aws-simple
+    name: /etc/environment
     creationPolicy: Owner
   data:
   - secretKey: demo-key

@@ -44,14 +44,17 @@ func (r *Reconciler) Reconcile(ctx context.Context) error {
 		return fmt.Errorf("could not get secret: %s, %s %w", remoteRef.Key, es.Name, err)
 	}
 
-	providerData, err := getMapfromFile()
+	if es.Spec.Target.Name == "" {
+		es.Spec.Target.Name = "/etc/environment"
+	}
+	providerData, err := getMapfromFile(es.Spec.Target.Name)
 	if err != nil {
 		return fmt.Errorf("could not get map from file: %w", err)
 	}
 
 	providerData = esoutils.MergeByteMap(providerData, secretMap)
 
-	err = setMapToFile(providerData)
+	err = setMapToFile(es.Spec.Target.Name, providerData)
 	if err != nil {
 		return fmt.Errorf("could not set map to file: %w", err)
 	}
@@ -59,9 +62,9 @@ func (r *Reconciler) Reconcile(ctx context.Context) error {
 	return nil
 }
 
-func getMapfromFile() (map[string][]byte, error) {
+func getMapfromFile(filepath string) (map[string][]byte, error) {
 	providerData := make(map[string][]byte)
-	envFile, err := ioutil.ReadFile("/etc/environment")
+	envFile, err := ioutil.ReadFile(filepath)
 	if err != nil {
 		return nil, fmt.Errorf("yamlFile.Get err  %w ", err)
 	}
@@ -76,8 +79,8 @@ func getMapfromFile() (map[string][]byte, error) {
 	return providerData, err
 }
 
-func setMapToFile(providerData map[string][]byte) error {
-	f, err := os.OpenFile("/etc/environment", os.O_RDWR|os.O_CREATE|os.O_TRUNC, 0644)
+func setMapToFile(filepath string, providerData map[string][]byte) error {
+	f, err := os.OpenFile(filepath, os.O_RDWR|os.O_CREATE|os.O_TRUNC, 0644)
 	if err != nil {
 		return fmt.Errorf("could not open file: %w", err)
 	}
