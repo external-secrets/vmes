@@ -29,7 +29,7 @@ cp pkg/configdata/ss.yml.example pkg/configdata/ss.yml
 Open `pkg/configdata/es.yml` and edit the following fields:
 
 - **spec.refreshInterval:** Choose a Time Duration interval used by the operator to fetch new secrets (1m = 1 minute, 1h = 1 hour, etc).
-- **spec.target.name:** #TODO: chose the env file where this will end up? (for now writing to /etc/environment - you need to run as root to write to this file)
+- **spec.target.name:** Chose the env file where this will end up (default is /etc/environment - You need to run as root to write there).
 - **spec.data.secretKey:** The name of the Env Var injected in the machine.
 - **spec.data.remoteRef.Key:** The name of the secret in the external provider.
 
@@ -61,6 +61,12 @@ tar -xvf vmes_${VMES_VERSION}_linux_amd64.tar.gz
 sudo cp vmes /usr/local/bin/
 ```
 
+To run the installed release just call vmes anywhere:
+
+```
+vmes
+```
+
 If you want you can build the executable locally:
 
 ```
@@ -71,6 +77,33 @@ And run it:
 
 ```
 ./vmes
+```
+
+## Systemd config
+
+You probably want to to run this tool as a service in a machine. For that you can create a Systemd unit file and let Systemd manage it. Run these commands:
+
+```
+sudo cat > /etc/systemd/system/vmes.service <<EOF
+[Unit]
+Description=vmes
+After=network.target
+
+[Service]
+Type=idle
+User=root
+Group=keycloak
+ExecStart=vmes
+TimeoutStartSec=600
+TimeoutStopSec=600
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+sudo systemctl daemon-reload
+sudo systemctl start vmes
+sudo systemctl enable vmes
 ```
 
 ## Roadmap
