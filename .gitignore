@@ -23,3 +23,7 @@ go.work
 # ignore initial yaml files
 es.yml
 ss.yml
+
+vmes
+
+vmes*.tar.gz

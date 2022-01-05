@@ -47,13 +47,27 @@ export AWS_ACCESS_KEY_ID="******"
 export AWS_SECRET_ACCESS_KEY="******"
 ```
 
-Build the executable:
+Export the version that you want to use:
+
+```
+export VMES_VERSION=0.0.1
+```
+
+Get that release and put the executable in a directory in your PATH:
+
+```
+wget https://github.com/external-secrets/vmes/releases/download/${VMES_VERSION}/vmes_${VMES_VERSION}_linux_amd64.tar.gz
+tar -xvf vmes_${VMES_VERSION}_linux_amd64.tar.gz
+sudo cp vmes /usr/local/bin/
+```
+
+If you want you can build the executable locally:
 
 ```
 go build
 ```
 
-Run it:
+And run it:
 
 ```
 ./vmes
