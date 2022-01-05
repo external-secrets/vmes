@@ -19,6 +19,7 @@ import (
 var ConfigES map[string]esv1alpha1.ExternalSecret
 var ConfigSS map[string]esv1alpha1.SecretStore
 var ConfigSecret map[string]corev1.Secret
+var ConfigLocation string
 var RefreshInterval v1.Duration
 var buildlock sync.RWMutex
 
@@ -203,17 +204,18 @@ func GetConfigSecret(s string) (r corev1.Secret) {
 	return r
 }
 
-func init() {
+func InitConfig() {
 	duration, _ := time.ParseDuration("10h")
+	fmt.Printf("Reading config from %s\n", ConfigLocation)
 	RefreshInterval = v1.Duration{}
 	RefreshInterval.Duration = duration
 	ConfigES = make(map[string]esv1alpha1.ExternalSecret)
 	ConfigSS = make(map[string]esv1alpha1.SecretStore)
 	ConfigSecret = make(map[string]corev1.Secret)
 	esyaml := &YAMLExternalSecret{}
-	esyamlFile, err := ioutil.ReadFile("pkg/configdata/es.yml")
+	esyamlFile, err := ioutil.ReadFile(fmt.Sprintf("%s/es.yml", ConfigLocation))
 	if err != nil {
-		fmt.Printf("yamlFile.Get err   #%v ", err)
+		fmt.Printf("yamlFile.Get err   #%v\n", err)
 	}
 	err = yaml.Unmarshal(esyamlFile, esyaml)
 	if err != nil {
@@ -221,9 +223,9 @@ func init() {
 	}
 
 	ssyaml := &YAMLSecretStore{}
-	ssyamlFile, err := ioutil.ReadFile("pkg/configdata/ss.yml")
+	ssyamlFile, err := ioutil.ReadFile(fmt.Sprintf("%s/ss.yml", ConfigLocation))
 	if err != nil {
-		fmt.Printf("yamlFile.Get err   #%v ", err)
+		fmt.Printf("yamlFile.Get err   #%v\n", err)
 	}
 	err = yaml.Unmarshal(ssyamlFile, ssyaml)
 	if err != nil {

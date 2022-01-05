@@ -22,18 +22,18 @@ Since we already implemented and tested multiple provider clients in the ESO pro
 Copy the example files provided to edit and configure them:
 
 ```
-cp pkg/configdata/es.yml.example pkg/configdata/es.yml
-cp pkg/configdata/ss.yml.example pkg/configdata/ss.yml
+cp pkg/configdata/es.yml.example ~/.vmes/es.yml
+cp pkg/configdata/ss.yml.example ~/.vmes/ss.yml
 ```
 
-Open `pkg/configdata/es.yml` and edit the following fields:
+Open `~/.vmes/es.yml` and edit the following fields:
 
 - **spec.refreshInterval:** Choose a Time Duration interval used by the operator to fetch new secrets (1m = 1 minute, 1h = 1 hour, etc).
 - **spec.target.name:** Chose the env file where this will end up (default is /etc/environment - You need to run as root to write there).
 - **spec.data.secretKey:** The name of the Env Var injected in the machine.
 - **spec.data.remoteRef.Key:** The name of the secret in the external provider.
 
-Open `pkg/configdata/ss.yml` and edit the following fields:
+Open `~/.vmes/ss.yml` and edit the following fields:
 
 - **spec.provider.aws.region:** Choose region where you created a secret.
 - **spec.provider.aws.service:** Let us use SecretsManager for this example.
@@ -64,7 +64,7 @@ sudo cp vmes /usr/local/bin/
 To run the installed release just call vmes anywhere:
 
 ```
-vmes
+vmes --config-path ~/.vmes
 ```
 
 If you want you can build the executable locally:
@@ -76,7 +76,7 @@ go build
 And run it:
 
 ```
-./vmes
+./vmes --config-path ~/.vmes
 ```
 
 ## Systemd config
@@ -93,7 +93,7 @@ After=network.target
 Type=idle
 User=root
 Group=keycloak
-ExecStart=vmes
+ExecStart=vmes --config-path ~/.vmes
 TimeoutStartSec=600
 TimeoutStopSec=600
 

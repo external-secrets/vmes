@@ -22,7 +22,6 @@ type Reconciler struct {
 }
 
 func (r *Reconciler) Reconcile(ctx context.Context) error {
-	fmt.Println("Reconciling")
 	es := configdata.GetConfigES("es")
 	if es.Spec.RefreshInterval != nil {
 		configdata.RefreshInterval = *es.Spec.RefreshInterval
