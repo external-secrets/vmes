@@ -20,6 +20,7 @@ func (c *Client) Get(ctx context.Context, key client.ObjectKey, obj client.Objec
 
 	switch obj.(type) {
 	case *corev1.Secret:
+		match := false
 		for _, object := range configdata.ConfigSecret {
 			if object.ObjectMeta.Name == name {
 				secret, ok := obj.(*corev1.Secret)
@@ -29,9 +30,14 @@ func (c *Client) Get(ctx context.Context, key client.ObjectKey, obj client.Objec
 				gvk := secret.GroupVersionKind()
 				*secret = object
 				secret.SetGroupVersionKind(gvk)
+				match = true
 			}
 		}
+		if !match {
+			return fmt.Errorf("could not find matching resource")
+		}
 	case *esv1alpha1.ExternalSecret:
+		match := false
 		for _, object := range configdata.ConfigES {
 			if object.ObjectMeta.Name == name {
 				es, ok := obj.(*esv1alpha1.ExternalSecret)
@@ -41,19 +47,28 @@ func (c *Client) Get(ctx context.Context, key client.ObjectKey, obj client.Objec
 				gvk := es.GroupVersionKind()
 				*es = object
 				es.SetGroupVersionKind(gvk)
+				match = true
 			}
 		}
+		if !match {
+			return fmt.Errorf("could not find matching resource")
+		}
 	case *esv1alpha1.SecretStore:
+		match := false
 		for _, object := range configdata.ConfigSS {
 			if object.ObjectMeta.Name == name {
 				ss, ok := obj.(*esv1alpha1.SecretStore)
 				if !ok {
-					return fmt.Errorf("es client did not understand object: %T", obj)
+					return fmt.Errorf("ss client did not understand object: %T", obj)
 				}
 				gvk := ss.GroupVersionKind()
 				*ss = object
 				ss.SetGroupVersionKind(gvk)
+				match = true
 			}
+		}
+		if !match {
+			return fmt.Errorf("could not find matching resource")
 		}
 	default:
 		return fmt.Errorf("kind unsuported for customclient")
