@@ -109,7 +109,9 @@ sudo systemctl enable vmes
 ## Roadmap
 
 - [] Only AWS provider working for now, need to reimplement schema here or have another way to grab the right provider
-- [] Configure where secrets will sink in, being a arbitraty file, exported directly as env vars, or something else.
+- [] Configure where secrets will sink in
+    - ✅ being a arbitraty file, 
+    - [] exported directly as env vars, or something else.
 - [] Support ec2 assume role and other auth methods
 - [] Test setup
-- [] Provide a way to configure different paths for where yaml files could be
+- ✅ Provide a way to configure different paths for where yaml files could be
