@@ -6,6 +6,9 @@ This project uses [ESO](https://github.com/external-secrets/external-secrets) as
 
 The initial need here is to run this project as a proccess on a VM that has some legacy applications, then we want to use secrets that are in a Secrets Manager. But we don't want to keep calling Secrets Managers from our applications, we want to just read values from env vars or env files.
 
+![image](https://user-images.githubusercontent.com/2432275/148208852-03bf4422-e392-4fb0-86c4-a6166cb5bc67.png)
+
+
 ### Disclaimer ⚠️
 
 This project is not stable or ready to be used. 
