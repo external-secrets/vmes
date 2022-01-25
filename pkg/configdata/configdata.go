@@ -22,6 +22,8 @@ var ConfigSecret map[string]corev1.Secret
 var ConfigLocation string
 var RefreshInterval v1.Duration
 var buildlock sync.RWMutex
+var PublicKeyFilePath string
+var NeedsExport string
 
 type YAMLSecretStore struct {
 	Metadata Metadata            `yaml:"metadata"`

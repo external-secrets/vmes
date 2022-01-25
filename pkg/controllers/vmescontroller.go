@@ -13,6 +13,7 @@ import (
 	esoutils "github.com/external-secrets/external-secrets/pkg/utils"
 	customclient "github.com/external-secrets/vmes/pkg/client"
 	"github.com/external-secrets/vmes/pkg/configdata"
+	"github.com/gusfcarvalho/saferun/pkg/exec"
 )
 
 // Reconciler reconciles a vmes.
@@ -50,8 +51,12 @@ func (r *Reconciler) Reconcile(ctx context.Context) error {
 	if err != nil {
 		return fmt.Errorf("could not get map from file: %w", err)
 	}
+	encryptedSecretMap, err := encryptProviderData(secretMap, configdata.PublicKeyFilePath)
+	if err != nil {
+		return fmt.Errorf("could not get encrypted data map: %w", err)
+	}
 
-	providerData = esoutils.MergeByteMap(providerData, secretMap)
+	providerData = esoutils.MergeByteMap(providerData, encryptedSecretMap)
 
 	err = setMapToFile(es.Spec.Target.Name, providerData)
 	if err != nil {
@@ -76,6 +81,15 @@ func getMapfromFile(filepath string) (map[string][]byte, error) {
 		}
 	}
 	return providerData, err
+}
+
+func encryptProviderData(providerData map[string][]byte, PublicKeyFilePath string) (map[string][]byte, error) {
+	answer := make(map[string][]byte)
+	for k, v := range providerData {
+		kd := exec.Encrypt(string(v), PublicKeyFilePath)
+		answer["SAFE_RUN_"+k] = []byte(kd)
+	}
+	return answer, nil
 }
 
 func setMapToFile(filepath string, providerData map[string][]byte) error {

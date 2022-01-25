@@ -14,6 +14,8 @@ import (
 
 func main() {
 	flag.StringVar(&configdata.ConfigLocation, "config-path", "/root/.vmes", "Where yaml files should be placed.")
+	flag.StringVar(&configdata.PublicKeyFilePath, "public-key-path", "", "Public key file path to use for encryption.")
+	flag.StringVar(&configdata.NeedsExport, "needs-export", "", "When set will add exports to the env file. Use when writing to a source file.")
 	flag.Parse()
 	configdata.InitConfig()
 	fmt.Println("Starting")
@@ -25,6 +27,6 @@ func main() {
 		fmt.Printf("could not reconcile: %w", err)
 	}
 	s := gocron.NewScheduler(time.UTC)
-	s.Every(configdata.RefreshInterval.Duration.String()).Do(func(){recon.Reconcile(ctx)})
+	s.Every(configdata.RefreshInterval.Duration.String()).Do(func() { recon.Reconcile(ctx) })
 	s.StartBlocking()
 }

@@ -27,3 +27,6 @@ ss.yml
 vmes
 
 vmes*.tar.gz
+*.key
+*.pub
+.env
