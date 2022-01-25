@@ -6,8 +6,7 @@ This project uses [ESO](https://github.com/external-secrets/external-secrets) as
 
 The initial need here is to run this project as a proccess on a VM that has some legacy applications, then we want to use secrets that are in a Secrets Manager. But we don't want to keep calling Secrets Managers from our applications, we want to just read values from env vars or env files.
 
-![image](https://user-images.githubusercontent.com/2432275/148208852-03bf4422-e392-4fb0-86c4-a6166cb5bc67.png)
-
+There is a way to encrypt and decrypt data to hide secrets a bit more. We are still experimenting with it. The idea is that you should generate private and public keys and use vmes together with [saferun](https://github.com/gusfcarvalho/saferun) if you would like asymetric encryption in your machine. No changes are needed to apps reading env vars/env files.
 
 ### Disclaimer ⚠️
 
@@ -61,10 +60,17 @@ tar -xvf vmes_${VMES_VERSION}_linux_amd64.tar.gz
 sudo cp vmes /usr/local/bin/
 ```
 
+If you are using vmes encryption and saferun, generate a key pair:
+
+```
+openssl genrsa -out myuser.key 2048
+openssl rsa -in myuser.key -out myuser.pub -pubout -outform PEM
+```
+
 To run the installed release just call vmes anywhere:
 
 ```
-vmes --config-path ~/.vmes
+vmes --config-path /home/youruser/.vmes --public-key-path /home/youruser/.vmes/test.pub
 ```
 
 If you want you can build the executable locally:
@@ -76,7 +82,23 @@ go build
 And run it:
 
 ```
-./vmes --config-path ~/.vmes
+./vmes --config-path /home/youruser/.vmes --public-key-path /home/youruser/.vmes/test.pub
+```
+
+To get values in your app with saferun, you can use:
+
+```
+./bin/saferun run --private-key=test.key  --only-encrypted /bin/env
+
+or with your app
+
+./bin/saferun run --private-key=test.key  --only-encrypted /path/to/app
+```
+
+If you are getting vars from /etc/environment and don't want to re-login to check you can run:
+
+```
+for line in $( cat /etc/environment ) ; do export $line ; done
 ```
 
 ## Systemd config
@@ -93,7 +115,7 @@ After=network.target
 Type=idle
 User=root
 Group=keycloak
-ExecStart=vmes --config-path ~/.vmes
+ExecStart=vmes --config-path /home/youruser/.vmes --public-key-path /home/youruser/.vmes/test.pub
 TimeoutStartSec=600
 TimeoutStopSec=600
 
@@ -109,9 +131,12 @@ sudo systemctl enable vmes
 ## Roadmap
 
 - [] Only AWS provider working for now, need to reimplement schema here or have another way to grab the right provider
+- [] Add option to use multiple public keys and multiple files to sink in (read more ESs)
 - [] Configure where secrets will sink in
     - ✅ being a arbitraty file, 
     - [] exported directly as env vars, or something else.
 - [] Support ec2 assume role and other auth methods
 - [] Test setup
 - ✅ Provide a way to configure different paths for where yaml files could be
+- ✅ Integrate with saferun
+- [] Add option to enable/disable encryption (also adds/removes SAFE_RUN_ prefix to envs in source files)
