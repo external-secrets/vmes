@@ -1,5 +1,5 @@
-# apiVersion: external-secrets.io/v1alpha1
-# kind: ExternalSecret
+apiVersion: external-secrets.io/v1alpha1
+kind: ExternalSecret
 metadata:
   name: example-aws
 spec:
@@ -10,7 +10,5 @@ spec:
   target:
     name: /etc/environment
     creationPolicy: Owner
-  data:
-  - secretKey: demo-key
-    remoteRef:
-      key: demo-simple
+  dataFrom:
+  - key: demo-simple
