@@ -6,7 +6,7 @@ This project uses [ESO](https://github.com/external-secrets/external-secrets) as
 
 The initial need here is to run this project as a proccess on a VM that has some legacy applications, then we want to use secrets that are in a Secrets Manager. But we don't want to keep calling Secrets Managers from our applications, we want to just read values from env vars or env files.
 
-There is a way to encrypt and decrypt data to hide secrets a bit more. We are still experimenting with it. The idea is that you should generate private and public keys and use vmes together with [saferun](https://github.com/gusfcarvalho/saferun) if you would like asymetric encryption in your machine. No changes are needed to apps reading env vars/env files.
+There is a way to encrypt and decrypt data to hide secrets a bit more. We are still experimenting with it. The idea is that you should generate private and public keys and use vmes together with [saferun](https://github.com/ContainerSolutions/saferun) if you would like asymetric encryption in your machine. No changes are needed to apps reading env vars/env files.
 
 ### Disclaimer ⚠️
 
