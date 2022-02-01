@@ -57,6 +57,8 @@ func (r *Reconciler) Reconcile(ctx context.Context) error {
 			return fmt.Errorf("could not get encrypted data map: %w", err)
 		}
 		providerData = esoutils.MergeByteMap(providerData, encryptedSecretMap)
+	} else {
+		providerData = esoutils.MergeByteMap(providerData, secretMap)
 	}
 
 	err = setMapToFile(es.Spec.Target.Name, providerData)

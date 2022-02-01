@@ -67,7 +67,7 @@ openssl genrsa -out myuser.key 2048
 openssl rsa -in myuser.key -out myuser.pub -pubout -outform PEM
 ```
 
-To run the installed release just call vmes anywhere:
+To run the installed release just call vmes anywhere (if you don't want asymmetric encryption, just omit `--public-key-path /home/youruser/.vmes/test.pub`):
 
 ```
 vmes --config-path /home/youruser/.vmes --public-key-path /home/youruser/.vmes/test.pub
@@ -79,7 +79,7 @@ If you want you can build the executable locally:
 go build
 ```
 
-And run it:
+And run it (if you don't want asymmetric encryption, just omit `--public-key-path /home/youruser/.vmes/test.pub`):
 
 ```
 ./vmes --config-path /home/youruser/.vmes --public-key-path /home/youruser/.vmes/test.pub
@@ -139,4 +139,4 @@ sudo systemctl enable vmes
 - [] Test setup
 - ✅ Provide a way to configure different paths for where yaml files could be
 - ✅ Integrate with saferun
-- [] Add option to enable/disable encryption (also adds/removes SAFE_RUN_ prefix to envs in source files)
+- ✅ Add option to enable/disable encryption (also adds/removes SAFE_RUN_ prefix to envs in source files)
