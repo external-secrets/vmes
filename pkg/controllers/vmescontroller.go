@@ -37,7 +37,7 @@ func (r *Reconciler) Reconcile(ctx context.Context) error {
 		return fmt.Errorf("could not create Client: %w", err)
 	}
 
-	remoteRef := es.Spec.Data[0].RemoteRef
+	remoteRef := es.Spec.DataFrom[0]
 
 	secretMap, err := secretClient.GetSecretMap(ctx, remoteRef)
 	if err != nil {
@@ -51,12 +51,13 @@ func (r *Reconciler) Reconcile(ctx context.Context) error {
 	if err != nil {
 		return fmt.Errorf("could not get map from file: %w", err)
 	}
-	encryptedSecretMap, err := encryptProviderData(secretMap, configdata.PublicKeyFilePath)
-	if err != nil {
-		return fmt.Errorf("could not get encrypted data map: %w", err)
+	if configdata.PublicKeyFilePath != "" {
+		encryptedSecretMap, err := encryptProviderData(secretMap, configdata.PublicKeyFilePath)
+		if err != nil {
+			return fmt.Errorf("could not get encrypted data map: %w", err)
+		}
+		providerData = esoutils.MergeByteMap(providerData, encryptedSecretMap)
 	}
-
-	providerData = esoutils.MergeByteMap(providerData, encryptedSecretMap)
 
 	err = setMapToFile(es.Spec.Target.Name, providerData)
 	if err != nil {
