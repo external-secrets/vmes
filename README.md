@@ -10,7 +10,7 @@ There is a way to encrypt and decrypt data to hide secrets a bit more. We are st
 
 ### Disclaimer ⚠️
 
-This project is not stable or ready to be used. 
+This project is in early access stage. Use at your own discretion.
 
 # How it works
 
