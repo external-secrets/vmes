@@ -50,7 +50,7 @@ Vmes will use AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY to authenticate, and l
 spec:
   provider:
     aws:
-      role: arn:aws:iam::479664765532:role/vmes-role ## This is the role that vmes will assume
+      role: arn:aws:iam::4796685492:role/vmes-role ## This is the role that vmes will assume
       service: SecretsManager
 [...]
 ```
