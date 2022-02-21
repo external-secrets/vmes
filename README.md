@@ -128,6 +128,10 @@ sudo systemctl start vmes
 sudo systemctl enable vmes
 ```
 
+## Docs
+
+You can find examples and other docs at [docs](docs)
+
 ## Roadmap
 
 - [] Only AWS provider working for now, need to reimplement schema here or have another way to grab the right provider
