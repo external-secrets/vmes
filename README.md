@@ -140,3 +140,4 @@ sudo systemctl enable vmes
 - ✅ Provide a way to configure different paths for where yaml files could be
 - ✅ Integrate with saferun
 - ✅ Add option to enable/disable encryption (also adds/removes SAFE_RUN_ prefix to envs in source files)
+- [] Upgrade to new ESO CRDS
