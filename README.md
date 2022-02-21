@@ -135,7 +135,7 @@ sudo systemctl enable vmes
 - [] Configure where secrets will sink in
     - ✅ being a arbitraty file, 
     - [] exported directly as env vars, or something else.
-- [] Support ec2 assume role and other auth methods
+- ✅ Support assume role and other auth methods
 - [] Test setup
 - ✅ Provide a way to configure different paths for where yaml files could be
 - ✅ Integrate with saferun
