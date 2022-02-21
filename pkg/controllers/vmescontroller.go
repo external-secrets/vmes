@@ -23,6 +23,7 @@ type Reconciler struct {
 }
 
 func (r *Reconciler) Reconcile(ctx context.Context) error {
+	fmt.Println("Reconciling")
 	es := configdata.GetConfigES("es")
 	if es.Spec.RefreshInterval != nil {
 		configdata.RefreshInterval = *es.Spec.RefreshInterval
@@ -34,13 +35,15 @@ func (r *Reconciler) Reconcile(ctx context.Context) error {
 
 	secretClient, err := storeProvider.NewClient(ctx, &store, client, "")
 	if err != nil {
-		return fmt.Errorf("could not create Client: %w", err)
+		fmt.Printf("could not create Client (could not read exported credentials): %w\n", err)
+		return fmt.Errorf("could not create Client (could not read exported credentials): %w", err)
 	}
 
 	remoteRef := es.Spec.DataFrom[0]
 
 	secretMap, err := secretClient.GetSecretMap(ctx, remoteRef)
 	if err != nil {
+		fmt.Printf("could not get secret: %s, %s %w\n", remoteRef.Key, es.Name, err)
 		return fmt.Errorf("could not get secret: %s, %s %w", remoteRef.Key, es.Name, err)
 	}
 
@@ -49,11 +52,13 @@ func (r *Reconciler) Reconcile(ctx context.Context) error {
 	}
 	providerData, err := getMapfromFile(es.Spec.Target.Name)
 	if err != nil {
+		fmt.Printf("could not get map from file: %w\n", err)
 		return fmt.Errorf("could not get map from file: %w", err)
 	}
 	if configdata.PublicKeyFilePath != "" {
 		encryptedSecretMap, err := encryptProviderData(secretMap, configdata.PublicKeyFilePath)
 		if err != nil {
+			fmt.Printf("could not get encrypted data map: %w\n", err)
 			return fmt.Errorf("could not get encrypted data map: %w", err)
 		}
 		providerData = esoutils.MergeByteMap(providerData, encryptedSecretMap)
@@ -63,6 +68,7 @@ func (r *Reconciler) Reconcile(ctx context.Context) error {
 
 	err = setMapToFile(es.Spec.Target.Name, providerData)
 	if err != nil {
+		fmt.Printf("could not set map to file: %w", err)
 		return fmt.Errorf("could not set map to file: %w", err)
 	}
 

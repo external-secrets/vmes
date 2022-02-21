@@ -26,6 +26,9 @@ func main() {
 		fmt.Printf("could not reconcile: %w", err)
 	}
 	s := gocron.NewScheduler(time.UTC)
-	s.Every(configdata.RefreshInterval.Duration.String()).Do(func() { recon.Reconcile(ctx) })
+	_, err = s.Every(configdata.RefreshInterval.Duration.String()).Do(func() { recon.Reconcile(ctx) })
+	if err != nil {
+		fmt.Println(err.Error())
+	}
 	s.StartBlocking()
 }
